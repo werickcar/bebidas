@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Bebidas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 25px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+        }
+        .result {
+            margin-top: 25px;
+            border: 1px solid #dddddd;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Cadastro de Bebidas</h1>
+
+    <label for="tipoBebida">Tipo de Bebida:</label>
+    <select id="tipoBebida">
+        <option value="vinho">Vinho</option>
+        <option value="refrigerante">Refrigerante</option>
+        <option value="suco">Suco</option>
+    </select>
+
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" placeholder="Nome da bebida">
+
+    <label for="preco">Preço:</label>
+    <input type="number" id="preco" placeholder="Preço da bebida" step="0.01">
+
+    <button onclick="cadastrarBebida()">Cadastrar Bebida</button>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    class Bebida {
+        constructor(nome, preco) {
+            this.nome = nome;
+            this.preco = preco;
+        }
+
+        mostrarBebida() {
+            return `Nome: ${this.nome}, Preço: R$${this.preco.toFixed(2)}`;
+        }
+
+        verificarPreco(preco) {
+            throw new Error("Método não implementado");
+        }
+    }
+
+    class Vinho extends Bebida {
+        verificarPreco(preco) {
+            return preco < 25;
+        }
+    }
+
+    class Refrigerante extends Bebida {
+        verificarPreco(preco) {
+            return preco < 5;
+        }
+    }
+
+    class Suco extends Bebida {
+        verificarPreco(preco) {
+            return preco < 2.5;
+        }
+    }
+
+    function cadastrarBebida() {
+        const tipo = document.getElementById("tipoBebida").value;
+        const nome = document.getElementById("nome").value;
+        const preco = parseFloat(document.getElementById("preco").value);
+        let bebida;
+
+        switch (tipo) {
+            case "vinho":
+                bebida = new Vinho(nome, preco);
+                break;
+            case "refrigerante":
+                bebida = new Refrigerante(nome, preco);
+                break;
+            case "suco":
+                bebida = new Suco(nome, preco);
+                break;
+        }
+
+        const resultado = bebida.mostrarBebida();
+        const precoValido = bebida.verificarPreco(preco) ? "Preço válido!" : "Preço inválido!";
+        
+        document.getElementById("result").innerHTML = `
+            <strong>Resultado:</strong><br>
+            ${resultado}<br>
+            ${precoValido}
+        `;
+    }
+</script>
+
+</body>
+</html>
